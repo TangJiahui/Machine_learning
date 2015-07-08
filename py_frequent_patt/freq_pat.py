@@ -1,5 +1,7 @@
-from pymining import itemmining, assocrules, perftesting
+
+#transfer the dataset to another format
 import csv
+
 def insertIntoDataStruct(name,location,mydict):
     if not name in mydict:
         mydict[name]=[location]
@@ -14,12 +16,32 @@ with open("FPM_PFW3_Others.csv") as f:
         #rows = rows.split(',')
         insertIntoDataStruct(rows[0],rows[1],mydict)
 
-transactions = tuple(mydict.values())
+transactions = list(mydict.values())
 
+with open("item.basket",'w',newline='') as f:
+    writer = csv.writer(f,delimiter=',')
+    for row in transactions:
+        writer.writerow(row)
 
-relim_input = itemmining.get_relim_input(transactions)
+## method 1: pymining package ####
+
+#from pymining import itemming, assocrues, perftesting
+#relim_input = itemmining.get_relim_input(transactions)
 #print(relim_input)
-item_sets = itemmining.relim(relim_input, min_support=2)
+#item_sets = itemmining.relim(relim_input, min_support=2)
 #print(item_sets)
-rules = assocrules.mine_assoc_rules(item_sets, min_support=2, min_confidence=0.05)
+#rules = assocrules.mine_assoc_rules(item_sets, min_support=2, min_confidence=0.05)
+#print(rules)
+
+
+## method 2: orange package #####
+
+import Orange
+
+items= Orange.data.Table("item.basket")
+rules= Orange.associate.AssociationRulesSparseInducer(items, support = 0.001, maxItemSets=1000000)
+
 print(rules)
+print "%4s %4s %s" % ("supp","conf","rule")
+for r in rules:
+    print "%5.3f %5.3f %s" % (r.support, r.confidence, r)
