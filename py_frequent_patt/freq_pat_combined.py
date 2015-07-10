@@ -18,6 +18,7 @@ with open("FPM_PFW3_Others.csv") as f:
 
 transactions = list(mydict.values())
 
+## write output into a format .basket that is suitable for Orange Package"
 with open("item.basket",'w',newline='') as f:
     writer = csv.writer(f,delimiter=',')
     for row in transactions:
