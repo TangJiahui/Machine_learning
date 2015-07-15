@@ -55,3 +55,57 @@ with open(filename_r,"w") as f:
     for r in rules:
         writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r)]) 
 
+
+
+#### Part 3: find the significant outliers ######
+lift = []
+support =[]
+confidence = []
+
+for r in rules:
+    lift += [r.lift]
+    support += [r.support]
+    confidence += [r.confidence]
+
+import numpy
+
+iqr_l = numpy.subtract(*numpy.percentile(numpy.array(lift),[75,25]))
+iqr_s = numpy.subtract(*numpy.percentile(numpy.array(support),[75,25]))
+iqr_c = numpy.subtract(*numpy.percentile(numpy.array(confidence),[75,25]))
+
+thre_l = numpy.percentile(numpy.array(lift),75) + 1.5*iqr_l
+thre_s = numpy.percentile(numpy.array(support),75) + 1.5*iqr_s
+thre_c = numpy.percentile(numpy.array(confidence),75) + 1.5*iqr_c
+
+rules_s=sorted(rules, key = lambda r: r.support, reverse=True )
+rules_c=sorted(rules, key = lambda r: r.confidence, reverse=True )
+
+filename_sign = filename_i[:-4]+'_significnat_csv'
+with open(filename_sign,"w") as f:
+    writer1 = csv.writer(f, delimiter = ' ')
+    writer1.writerow(["Significant outliers derived by lift"])
+    writer1.writerow(["supp","conf","lift","rule"])
+    writer2 = csv.writer(f, delimiter=',')
+    for r in rules:
+        if r.lift > thre_l:
+            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r)]) 
+    writer1.writerow(["Significant outliers derived by support"])
+    writer1.writerow(["supp","conf","lift","rule"])
+    for r in rules_s:
+        if r.support > thre_s:
+            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r)]) 
+    writer1.writerow(["Significant outliers derived by confidence"])
+    writer1.writerow(["supp","conf","lift","rule"])
+    for r in rules_c:
+        if r.confidence > thre_c:
+            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r)]) 
+
+
+
+
+
+
+
+
+
+
