@@ -57,7 +57,9 @@ with open(filename_r,"w") as f:
     writer1.writerow(["supp","conf","lift","rule"])
     writer2 = csv.writer(f, delimiter=",")
     for r in rules:
-        writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r)]) 
+        r_format=str(r).replace(' -> ', '->')
+        r_format=str(r_format).replace(" ","&&")
+        writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r_format)]) 
 
 
 
@@ -93,29 +95,35 @@ filename_sign_c = filename_i[:-4]+'_significant_confidence.csv'
 with open(filename_sign_l,"w") as f:
     writer1 = csv.writer(f, delimiter = ' ')
     writer2 = csv.writer(f, delimiter=',')
-    writer1.writerow(["Significant outliers derived by lift"])
+    #writer1.writerow(["Significant outliers derived by lift"])
     writer1.writerow(["supp","conf","lift","rule"])
     for r in rules:
         if r.lift > thre_l:
-            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r)]) 
+            r_format=str(r).replace(' -> ', '->')
+            r_format=str(r_format).replace(" ","&&")
+            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r_format)]) 
 
 with open(filename_sign_s,"w") as f:
     writer1 = csv.writer(f, delimiter = ' ')
     writer2 = csv.writer(f, delimiter=',')
-    writer1.writerow(["Significant outliers derived by support"])
+    #writer1.writerow(["Significant outliers derived by support"])
     writer1.writerow(["supp","conf","lift","rule"])
     for r in rules_s:
-        if r.support > thre_s:
-            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r)]) 
+         if r.support > thre_s:
+            r_format=str(r).replace(' -> ', '->')
+            r_format=str(r_format).replace(" ","&&")
+            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r_format)]) 
 
 with open(filename_sign_c,"w") as f:
     writer1 = csv.writer(f, delimiter = ' ')
     writer2 = csv.writer(f, delimiter=',')
-    writer1.writerow(["Significant outliers derived by confidence"])
+    #writer1.writerow(["Significant outliers derived by confidence"])
     writer1.writerow(["supp","conf","lift","rule"])
     for r in rules_c:
         if r.confidence > thre_c:
-            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r)]) 
+            r_format=str(r).replace(' -> ', '->')
+            r_format=str(r_format).replace(" ","&&")
+            writer2.writerow(["%5.3f %5.3f %5.3f %s" % (r.support, r.confidence, r.lift, r_format)]) 
 
 
 
